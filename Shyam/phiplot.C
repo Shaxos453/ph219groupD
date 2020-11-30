@@ -19,21 +19,23 @@ void phiplot()
 
   Double_t maxpt = 0;
   Int_t maxptntrk = 0;
+  Int_t maxj = 0;
 
   for(Int_t i = 0; i<entries; i++)
   {
     tree->GetEntry(i);
-    for(Int_t j = 0; j++<ntrack; j++)
+    for(Int_t j = 0; j<ntrack; j++)
     {
       if(pT[j]>maxpt)
       {
         maxpt = pT[j];
         maxptntrk = ntrack;
+        maxj = j;
       }
     }
   }
 
-  Double_t phimax = phi[maxptntrk];
+  Double_t phimax = phi[maxj];
 
   std::cout<<"max pt = "<<maxpt<<endl<<"corres ntrack = "<<maxptntrk<<endl;
   std::cout<<"corres phi = "<<phimax<<endl;
@@ -45,7 +47,7 @@ void phiplot()
   for(Int_t i = 0; i<entries; i++)
   {
     tree->GetEntry(i);
-    for(Int_t j = 0; j++<ntrack; j++)
+    for(Int_t j = 0; j<ntrack; j++)
     {
       Double_t dphi = phi[j] - phimax;
       delphi->Fill(dphi);
