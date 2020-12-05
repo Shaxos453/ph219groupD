@@ -83,7 +83,12 @@ void phiplot()
       delphi->Fill(dphi);
     }
   }
-  delphi -> Draw();
+  Double_t factor = 1.;
+  delphi->Scale(factor/delphi->GetMaximum());
+  //delphi->GetYaxis()->SetRangeUser(0,1);
+  //Double_t scale = delphi->GetXaxis()->GetBinWidth(1)/(delphi->Integral());
+  //delphi->Scale(scale);
+  delphi -> Draw("HIST");
 
 
   //printing out the three values (for checking)
