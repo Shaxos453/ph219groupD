@@ -40,27 +40,10 @@ void phiplot()
   //initialising the variables for maximum pT and corresponding ntrack
   // and corresponding phi value for that maximum pT
   Double_t maxpt = 0;
-  Int_t maxptntrk = 0;
+  Double_t maxpt2 = 0;
+  //Int_t maxptntrk = 0;
   Double_t phimax = 0;
-
-  for(Int_t i = 0; i<entries; i++) //going through all ntrack entries
-  {
-    tree->GetEntry(i); //getting all values of ntrack, phi, eta and pT for that entry
-    for(Int_t j = 0; j<ntrack; j++) //going through all ntracks in that entry
-    {
-      if(pT[j]>maxpt) //finding max value of pT in the multiplicity class
-      {
-        maxpt = pT[j];
-        maxptntrk = ntrack;
-        phimax = phi[j];
-      }
-    }
-  }
-
-
-  //printing out the three values (for checking)
-  std::cout<<"max pt = "<<maxpt<<endl<<"corres ntrack = "<<maxptntrk<<endl;
-  std::cout<<"corres phi = "<<phimax<<endl;
+  Double_t phimax2 = 0;
 
   //creating a canvas for the histogram of size 500px * 500px
   TCanvas *c1 = new TCanvas("c1", "Delta Phi distribution", 500, 500);
@@ -68,6 +51,45 @@ void phiplot()
   //declaring a histogram with 125 bins, and X axis range from 0 to Pi
   TH1D *delphi = new TH1D("delphi", "Delta Phi dist", 125, 0, TMath::Pi());
   Double_t dphi = 0; //declaring variable to store difference in phi
+
+  for(Int_t i = 0; i<entries; i++) //going through all ntrack entries
+  {
+    tree->GetEntry(i); //getting all values of ntrack, phi, eta and pT for that entry
+    maxpt = 0;
+    maxpt2 = 0;
+    phimax = 0;
+    phimax2 = 0;
+    for(Int_t j = 0; j<ntrack; j++) //going through all ntracks in that entry
+    {
+      if(pT[j]>maxpt) //finding max value of pT in the multiplicity class
+      {
+        maxpt2 = maxpt;
+        maxpt = pT[j];
+        //maxptntrk = ntrack;
+        phimax2 = phimax;
+        phimax = phi[j];
+      }
+      else if(pT[j] > maxpt2)
+      {
+        maxpt2 = pT[j];
+        phimax2 = phi[j];
+      }
+      dphi = abs(phimax - phimax2); //dphi is absolute difference between phi[j] and phimax
+      if(dphi>TMath::Pi()){
+        dphi = 2*TMath::Pi() - dphi; /*if the difference goes over 2pi then we
+        bring it back to range (0 to pi)*/
+      }
+      //Double_t dphi = abs(phi[j] - phimax);
+      delphi->Fill(dphi);
+    }
+  }
+  delphi -> Draw();
+
+
+  //printing out the three values (for checking)
+  //std::cout<<"max pt = "<<maxpt<<endl<<"corres ntrack = "<<maxptntrk<<endl;
+  //std::cout<<"corres phi = "<<phimax<<endl;
+  /*
   for(Int_t i = 0; i<entries; i++)
   {
     tree->GetEntry(i); //getting all values of ntrack, phi, eta and pT for that entry
@@ -76,12 +98,13 @@ void phiplot()
     {
       dphi = abs(phi[j] - phimax); //dphi is absolute difference between phi[j] and phimax
       if(dphi>TMath::Pi()){
-        dphi = 2*TMath::Pi() - dphi; /*if the difference goes over 2pi then we
-        bring it back to range (0 to pi)*/
+        dphi = 2*TMath::Pi() - dphi; //if the difference goes over 2pi then we
+        //bring it back to range (0 to pi)
       }
       //Double_t dphi = abs(phi[j] - phimax);
       delphi->Fill(dphi); //filling the histogram with the dphi values
     }
   }
   delphi->Draw(); //drawing the histogram
+  */
 }
