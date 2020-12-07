@@ -11,11 +11,9 @@ This code solves for
 -Plots a 1D histogram of the absolute difference between each phi value and the
 phi value corresponding to maximum pT.
 
-Yet to figure out:
-How to normalise/scale the 1D histogram to fit in the frequency range 0 to 1
 */
 
-void phiplot()
+void phiplot2040()
 {
   TFile *f = new TFile("13TeV_CR0_RHoff.root"); //opens file 13TeV_CR0_RHoff.root
   TTree *tree = (TTree*)f->Get("pytree2040"); //opens tree of multiplicity class 20-40
@@ -83,8 +81,8 @@ void phiplot()
       delphi->Fill(dphi);
     }
   }
-  Double_t factor = 1.;
-  delphi->Scale(factor/delphi->GetMaximum());
+  //Double_t factor = 1.;
+  //delphi->Scale(factor/delphi->GetMaximum());
   //delphi->GetYaxis()->SetRangeUser(0,1);
   //Double_t scale = delphi->GetXaxis()->GetBinWidth(1)/(delphi->Integral());
   //delphi->Scale(scale);
