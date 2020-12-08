@@ -40,7 +40,7 @@ void sumpT_away_4060()
     sum_pT=0;
     for(Int_t j = 0; j<ntrack; j++) //going through all ntracks in that entry
     {
-      if(pT[j]>maxpt) //finding max value of pT in the multiplicity class
+      if(pT[j]> 0.5 && pT[j]>maxpt) //finding max value of pT in the multiplicity class
       {
         maxpt = pT[j];
         phimax = phi[j];
@@ -48,6 +48,7 @@ void sumpT_away_4060()
     }
     for(Int_t j = 0; j<ntrack; j++)
     {
+      if(pT[j]>0.5){
         dphi = abs(phimax - phi[j]); //dphi is absolute difference between phi[j] and phimax
         if(dphi>TMath::Pi() && abs(eta[j])<2.5)
         {
@@ -59,6 +60,7 @@ void sumpT_away_4060()
             sum_pT+=pT[j];
         }
     }
+  }
     sum_pT=sum_pT/(5*TMath::Pi()/3);
 
     d2_sum_pT->Fill(maxpt,sum_pT);
@@ -91,5 +93,5 @@ void sumpT_away_4060()
   final->GetYaxis()->SetTitleSize(0.04);
   final->GetYaxis()->CenterTitle();
   final->Draw("HIST");
-  //c2->SaveAs("--");
+  c2->SaveAs("spT_away_4060.pdf");
 }
